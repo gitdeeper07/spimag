@@ -1,0 +1,222 @@
+# ⚛️ SPIMAG Default Configuration
+# Spin-Induced Magnetic Alignment & Geospatial Intelligence
+
+version: 1.0
+environment: development
+
+# Project settings
+project:
+  name: "SPIMAG"
+  species_count: 31
+  datasets: 2491
+  version: 1.0.0
+  doi: "10.14293/SPIMAG.2026.001"
+
+# Server settings
+server:
+  host: 0.0.0.0
+  port: 8000
+  workers: 2
+  timeout: 120
+  api_prefix: /api/v1
+
+# Database settings
+database:
+  url: postgresql://spimag_user:password@localhost:5432/spimag
+  pool_size: 10
+  max_overflow: 20
+  timeout: 30
+  echo: false
+
+# Redis cache
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  password: ""
+  timeout: 5
+
+# SMNI Parameters
+parameters:
+  S_yield:
+    enabled: true
+    weight: 0.22
+    threshold_optimal: 0.85
+    threshold_dysfunctional: 0.30
+    calibration_file: calibrations/s_yield_2026.json
+    
+  DE_zeeman:
+    enabled: true
+    weight: 0.18
+    earth_field_microtesla: 50
+    calibration_file: calibrations/de_zeeman_2026.json
+    
+  Gamma_coh:
+    enabled: true
+    weight: 0.16
+    coherence_threshold_microsec: 4.7
+    measurement_temp_celsius: 37
+    calibration_file: calibrations/gamma_coh_2026.json
+    
+  Theta_inc:
+    enabled: true
+    weight: 0.14
+    precision_threshold_degrees: 5.0
+    calibration_file: calibrations/theta_inc_2026.json
+    
+  Chi_para:
+    enabled: true
+    weight: 0.10
+    magnetite_sensitivity_JpT: 1.4e-17
+    calibration_file: calibrations/chi_para_2026.json
+    
+  P_singlet:
+    enabled: true
+    weight: 0.09
+    modulation_threshold: 0.001
+    calibration_file: calibrations/p_singlet_2026.json
+    
+  Omega_dipole:
+    enabled: true
+    weight: 0.06
+    distance_angstrom: 19.5
+    calibration_file: calibrations/omega_dipole_2026.json
+    
+  V_nav:
+    enabled: true
+    weight: 0.05
+    r_vector_threshold: 0.85
+    calibration_file: calibrations/v_nav_2026.json
+
+# AI Ensemble settings
+ai:
+  model: ensemble
+  ensemble_weights:
+    lstm: 0.30
+    xgboost: 0.30
+    cnn: 0.20
+    pi_qnn: 0.20
+  
+  lstm:
+    units: [64, 32]
+    dropout: 0.2
+    recurrent_dropout: 0.2
+    batch_size: 32
+    epochs: 50
+    
+  xgboost:
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    
+  cnn:
+    filters: [32, 64]
+    kernel_sizes: [3, 3]
+    pool_sizes: [2, 2]
+    dense_units: 128
+    
+  pi_qnn:
+    enabled: true
+    quantum_layers: 2
+    classical_units: [256, 128]
+    learning_rate: 0.001
+    physics_constraints: true
+
+# Spin dynamics settings
+spin_dynamics:
+  solver: stochastic_liouville
+  time_steps: 1000
+  max_time_microsec: 20
+  hyperfine_library: data/hyperfine_tensors/
+  recombination_rates:
+    singlet: 1.0e6
+    triplet: 1.0e4
+
+# External APIs
+external:
+  noaa:
+    enabled: true
+    base_url: https://services.swpc.noaa.gov
+    endpoints:
+      kp_index: /products/noaa-planetary-k-index.json
+      goes_magnetometer: /json/goes/magnetometer.json
+      solar_wind: /products/solar-wind/plasma-7-day.json
+    update_interval_seconds: 30
+    timeout_seconds: 10
+    
+  intermagnet:
+    enabled: true
+    base_url: https://imag-data.bgs.ac.uk
+    endpoints:
+      observatories: /imag/observatories
+      data: /imag/data
+    observatories_count: 185
+    update_interval_seconds: 60
+    timeout_seconds: 15
+
+# Dashboard settings
+dashboard:
+  host: 0.0.0.0
+  port: 8501
+  theme: dark
+  refresh_rate_seconds: 30
+  storm_monitoring: true
+  maps:
+    default_zoom: 2
+    center_lat: 20.0
+    center_lon: 0.0
+  charts:
+    default_height: 400
+    color_palette: viridis
+
+# Data paths
+data:
+  base_dir: /data
+  spin_dynamics: /data/spin
+  behavioral: /data/behavioral
+  geomagnetic: /data/geomagnetic
+  rf_surveys: /data/rf
+  results: /data/results
+  backups: /data/backups
+  temp: /data/temp
+
+# Models path
+models:
+  base_dir: /opt/spimag/models
+  ensemble: /opt/spimag/models/ensemble
+  checkpoints: /opt/spimag/models/checkpoints
+
+# Logging
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: /var/log/spimag/spimag.log
+  max_size_mb: 100
+  backup_count: 5
+  json_format: false
+
+# Security
+security:
+  jwt_secret: ${JWT_SECRET:-change_me_in_production}
+  jwt_expiry_hours: 24
+  rate_limit: 100/minute
+  cors_origins:
+    - https://spimag.netlify.app
+    - https://spimag.readthedocs.io
+    - http://localhost:8501
+    - http://localhost:8000
+  allowed_hosts:
+    - spimag.netlify.app
+    - localhost
+    - 127.0.0.1
+
+# Monitoring
+monitoring:
+  metrics_enabled: true
+  metrics_port: 9090
+  health_check_interval: 30
+  profiler_enabled: false
+
+# ⚛️ Inside the eye of a migrating robin, two electrons are entangled.

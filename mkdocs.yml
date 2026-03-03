@@ -1,0 +1,123 @@
+site_name: SPIMAG Documentation
+site_description: Spin-Induced Magnetic Alignment & Geospatial Intelligence
+site_author: Samir Baladi
+site_url: https://spimag.netlify.app
+
+repo_name: gitdeeper07/spimag
+repo_url: https://gitlab.com/gitdeeper07/spimag
+edit_uri: ""
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: indigo
+    accent: cyan
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/gitlab
+  logo: assets/spimag-logo.png
+  favicon: assets/favicon.ico
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Framework:
+    - Overview: framework/overview.md
+    - Quantum Foundations: framework/quantum.md
+    - Radical Pair Mechanism: framework/radical-pair.md
+    - SMNI Index: framework/smni.md
+  - Parameters:
+    - Overview: parameters/index.md
+    - S_yield: parameters/s_yield.md
+    - ΔE_zeeman: parameters/de_zeeman.md
+    - Γ_coh: parameters/gamma_coh.md
+    - θ_inc: parameters/theta_inc.md
+    - χ_para: parameters/chi_para.md
+    - P_singlet: parameters/p_singlet.md
+    - Ω_dipole: parameters/omega_dipole.md
+    - V_nav: parameters/v_nav.md
+  - AI Ensemble:
+    - Architecture: ai/architecture.md
+    - PI-QNN: ai/pi-qnn.md
+    - LSTM: ai/lstm.md
+    - XGBoost: ai/xgboost.md
+    - CNN: ai/cnn.md
+  - Species:
+    - Overview: species/index.md
+    - European Robin: species/erithacus-rubecula.md
+    - Garden Warbler: species/sylvia-borin.md
+    - Monarch Butterfly: species/danaus-plexippus.md
+    - Loggerhead Sea Turtle: species/caretta-caretta.md
+    - Domestic Pigeon: species/columba-livia.md
+  - API Reference:
+    - Core: api/core.md
+    - Parameters: api/parameters.md
+    - AI Models: api/ai.md
+    - Utilities: api/utils.md
+  - Case Studies:
+    - European Robin Cry4a: case-studies/erithacus.md
+    - RF Disruption: case-studies/rf-disruption.md
+    - Geomagnetic Storms: case-studies/geomagnetic-storms.md
+    - Bio-Inspired Sensors: case-studies/bio-sensors.md
+  - Reports: reports.md
+  - Contributing: contributing.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/gitdeeper07/spimag
+    - icon: fontawesome/brands/github
+      link: https://github.com/gitdeeper07/spimag
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:gitdeeper@gmail.com
+    - icon: fontawesome/brands/orcid
+      link: https://orcid.org/0009-0003-8903-0029
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/gitdeeper07/spimag
+  version:
+    provider: mike
+    default: latest
+
+copyright: Copyright &copy; 2026 Samir Baladi · Ronin Institute / Rite of Renaissance
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          selection:
+            docstring_style: google
+  - mike:
+      version_selector: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - minify:
+      minify_html: true

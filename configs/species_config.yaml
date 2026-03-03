@@ -1,0 +1,42 @@
+# SPIMAG Species Configuration
+
+species:
+  erithacus_rubecula:
+    common_name: "European Robin"
+    family: "Passeriformes"
+    continent: "Europe"
+    cryptochrome: "ErCry4a"
+    coherence_microsec: 6.2
+    smni_accuracy: 0.962
+    
+  sylvia_borin:
+    common_name: "Garden Warbler"
+    family: "Passeriformes"
+    continent: "Europe"
+    cryptochrome: "SbCry4"
+    coherence_microsec: 5.8
+    smni_accuracy: 0.951
+    
+  columba_livia:
+    common_name: "Domestic Pigeon"
+    family: "Columbiformes"
+    continent: "Europe"
+    cryptochrome: "CcCry4"
+    coherence_microsec: 5.4
+    smni_accuracy: 0.943
+    
+  danaus_plexippus:
+    common_name: "Monarch Butterfly"
+    family: "Lepidoptera"
+    continent: "North America"
+    cryptochrome: "DpCry1/DpCry2"
+    coherence_microsec: 4.9
+    smni_accuracy: 0.928
+    
+  caretta_caretta:
+    common_name: "Loggerhead Sea Turtle"
+    family: "Testudines"
+    continent: "Global"
+    cryptochrome: "CcCry"
+    coherence_microsec: 3.8
+    smni_accuracy: 0.892

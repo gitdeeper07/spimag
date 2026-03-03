@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use SPIMAG in your research, please cite it as below."
+
+title: "SPIMAG: A Quantum Biophysical Framework for Decoding Cryptochrome-Based Magnetoreception in Migratory Animals"
+
+authors:
+  - family-names: "Baladi"
+    given-names: "Samir"
+    orcid: "https://orcid.org/0009-0003-8903-0029"
+    email: "gitdeeper@gmail.com"
+    affiliation: "Ronin Institute / Rite of Renaissance"
+
+date-released: 2026-03-01
+doi: "10.14293/SPIMAG.2026.001"
+version: "1.0.0"
+license: "MIT"
+repository-code: "https://gitlab.com/gitdeeper07/spimag"
+url: "https://spimag.netlify.app"
+
+abstract: "SPIMAG presents the first unified, multi-parameter quantum biophysical framework for the systematic decoding, computational modeling, and geospatial application of cryptochrome-mediated magnetoreception in migratory animals. The framework integrates eight analytically independent quantum parameters into a single Spin Magnetic Navigation Index (SMNI): Spin Quantum Yield (S_yield), Zeeman Energy Splitting (ΔE_zeeman), Quantum Coherence Lifetime (Γ_coh), Magnetic Inclination Sensitivity (θ_inc), Paramagnetic Susceptibility (χ_para), Singlet-Triplet State Probability (P_singlet), Dipolar Coupling Tensor (Ω_dipole), and Navigational Vector Precision (V_nav). Validated against published experimental data from 31 migratory species across five continents, the SMNI achieves classification accuracy of 94.8% in discriminating magnetically competent from magnetically disrupted navigation states."
+
+keywords:
+  - "quantum-biology"
+  - "cryptochrome"
+  - "magnetoreception"
+  - "radical-pair-mechanism"
+  - "spin-dynamics"
+  - "zeeman-effect"
+  - "quantum-coherence"
+  - "avian-navigation"
+  - "biogenic-magnetite"
+  - "hyperfine-interaction"
+  - "quantum-zeno-effect"
+  - "bio-inspired-sensors"
+  - "geomagnetic-storms"
+  - "migratory-birds"
+  - "spin-magnetic-navigation-index"
+

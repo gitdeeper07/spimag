@@ -1,0 +1,32 @@
+# SMNI Alert Thresholds
+
+thresholds:
+  OPTIMAL:
+    min: 0.88
+    max: 1.00
+    color: "🟢"
+    action: "Nominal monitoring"
+    
+  GOOD:
+    min: 0.72
+    max: 0.88
+    color: "🟡"
+    action: "Standard tracking"
+    
+  MODERATE:
+    min: 0.55
+    max: 0.72
+    color: "🟠"
+    action: "Enhanced monitoring"
+    
+  MARGINAL:
+    min: 0.38
+    max: 0.55
+    color: "🔴"
+    action: "Alert stakeholders"
+    
+  DYSFUNCTIONAL:
+    min: 0.00
+    max: 0.38
+    color: "⛔"
+    action: "Critical alert"

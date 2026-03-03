@@ -1,0 +1,245 @@
+# ⚛️ SPIMAG Docker Compose Configuration
+# Spin-Induced Magnetic Alignment & Geospatial Intelligence
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: spimag-postgres
+    environment:
+      POSTGRES_DB: spimag
+      POSTGRES_USER: spimag_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - spimag-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spimag_user -d spimag"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    container_name: spimag-redis
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - spimag-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gitlab.com/gitdeeper07/spimag:latest
+    container_name: spimag-api
+    command: spimag serve --api --host 0.0.0.0 --port 8000 --workers 4
+    environment:
+      SPIMAG_CONFIG: /etc/spimag/config.yaml
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: spimag
+      DB_USER: spimag_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      API_URL: https://spimag.netlify.app/api
+      NOAA_API_KEY: ${NOAA_API_KEY}
+      INTERMAGNET_TOKEN: ${INTERMAGNET_TOKEN}
+      LOG_LEVEL: INFO
+    volumes:
+      - ./config:/etc/spimag
+      - ./data:/data
+      - ./models:/opt/spimag/models
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - spimag-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gitlab.com/gitdeeper07/spimag:latest
+    container_name: spimag-dashboard
+    command: spimag serve --dashboard --host 0.0.0.0 --port 8501
+    environment:
+      SPIMAG_CONFIG: /etc/spimag/config.yaml
+      API_URL: http://api:8000
+      PUBLIC_API_URL: https://spimag.netlify.app/api
+      LOG_LEVEL: INFO
+    volumes:
+      - ./config:/etc/spimag
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api
+    networks:
+      - spimag-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gitlab.com/gitdeeper07/spimag:latest
+    container_name: spimag-worker
+    command: spimag worker --queues spin,behavioral,storm
+    environment:
+      SPIMAG_CONFIG: /etc/spimag/config.yaml
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: spimag
+      DB_USER: spimag_user
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      LOG_LEVEL: INFO
+    volumes:
+      - ./config:/etc/spimag
+      - ./data:/data
+      - ./models:/opt/spimag/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+    networks:
+      - spimag-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+  nginx:
+    image: nginx:alpine
+    container_name: spimag-nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./www:/var/www/html:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+      - dashboard
+    networks:
+      - spimag-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backup:
+    image: alpine:latest
+    container_name: spimag-backup
+    command: |
+      sh -c "
+      apk add --no-cache postgresql-client &&
+      while true; do
+        DATE=\$$(date +%Y%m%d_%H%M%S)
+        echo \"Creating backup \$$DATE\"
+        PGPASSWORD=\$$DB_PASSWORD pg_dump -h postgres -U spimag_user spimag | gzip > /backups/db_\$$DATE.sql.gz
+        find /backups -type f -name '*.sql.gz' -mtime +30 -delete
+        sleep 86400
+      done
+      "
+    environment:
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./backups:/backups
+    depends_on:
+      - postgres
+    networks:
+      - spimag-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  spimag-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# ⚛️ Inside the eye of a migrating robin, two electrons are entangled.

@@ -1,0 +1,15 @@
+{
+  "species": "erithacus-rubecula",
+  "parameters": {
+    "S_yield": 0.92,
+    "ΔE_zeeman": 0.88,
+    "Γ_coh": 0.95,
+    "θ_inc": 0.91,
+    "χ_para": 0.45,
+    "P_singlet": 0.87,
+    "Ω_dipole": 0.82,
+    "V_nav": 0.94
+  },
+  "expected_smni": 0.89,
+  "expected_level": "OPTIMAL"
+}

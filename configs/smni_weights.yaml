@@ -1,0 +1,14 @@
+# SMNI Parameter Weights
+# Optimized via Bayesian MCMC posterior sampling
+
+weights:
+  S_yield: 0.22      # Spin Quantum Yield
+  ΔE_zeeman: 0.18    # Zeeman Energy Splitting
+  Γ_coh: 0.16        # Quantum Coherence Lifetime
+  θ_inc: 0.14        # Magnetic Inclination Sensitivity
+  χ_para: 0.10       # Paramagnetic Susceptibility
+  P_singlet: 0.09    # Singlet-Triplet Probability
+  Ω_dipole: 0.06     # Dipolar Coupling Tensor
+  V_nav: 0.05        # Navigational Vector Precision
+
+# Total: 1.00

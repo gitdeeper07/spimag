@@ -1,0 +1,43 @@
+# SPIMAG Manifest
+
+include README.md
+include LICENSE
+include requirements.txt
+include requirements-dev.txt
+include CHANGELOG.md
+include AUTHORS.md
+include CODE_OF_CONDUCT.md
+include CONTRIBUTING.md
+include DEPLOY.md
+include INSTALL.md
+include INSTALLATION.md
+include DESCRIPTION.md
+include PROJECT_SUMMARY.md
+include COMPLETION_CERTIFICATE.txt
+include COMPLETION.md
+include COMPLETION.txt
+
+recursive-include tests *.py
+recursive-include docs *.rst
+recursive-include docs *.md
+recursive-include docs *.yaml
+recursive-include data/sample *.csv
+recursive-include data/sample *.h5
+recursive-include config *.yaml *.json
+recursive-include scripts *.py
+recursive-include dashboard *.py *.html *.css *.js
+recursive-include models *.h5 *.pkl
+recursive-include spimag/parameters *.py
+recursive-include spimag/quantum *.py
+recursive-include spimag/ai *.py
+
+exclude .gitignore
+exclude .gitattributes
+exclude .dockerignore
+exclude docker-compose.yml
+prune .github
+prune .gitlab
+prune __pycache__
+prune *.pyc
+prune *.pyo
+prune *.pyd

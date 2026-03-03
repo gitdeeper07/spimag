@@ -1,0 +1,36 @@
+# AI Ensemble Configuration
+
+ensemble:
+  weights:
+    lstm: 0.30
+    xgboost: 0.30
+    cnn: 0.20
+    pi_qnn: 0.20
+
+lstm:
+  input_dim: 10
+  hidden_dim: 64
+  num_layers: 2
+  dropout: 0.2
+  batch_size: 32
+  epochs: 50
+
+xgboost:
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  subsample: 0.8
+  colsample_bytree: 0.8
+
+cnn:
+  input_channels: 1
+  num_classes: 5
+  kernel_size: 3
+  pool_size: 2
+
+pi_qnn:
+  input_dim: 8
+  hidden_dim: 128
+  quantum_layers: 2
+  learning_rate: 0.001
+  physics_constraints: true
